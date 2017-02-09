@@ -1,0 +1,168 @@
+
+<!DOCTYPE HTML>
+<!--[if IE 6 ]> <html class="ne_ua_ie6 ne_ua_ielte8"> <![endif]-->
+<!--[if IE 7 ]> <html class="ne_ua_ie7 ne_ua_ielte8"> <![endif]-->
+<!--[if IE 8 ]> <html class="ne_ua_ie8 ne_ua_ielte8"> <![endif]-->
+<!--[if IE 9 ]> <html class="ne_ua_ie9"> <![endif]-->
+<!--[if (gte IE 10)|!(IE)]><!--> <html phone="1"> <!--<![endif]-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=750, user-scalable=no" />
+<meta name="cms_id" content="0001dada_valentines2016_test" />
+<meta name="model_url" content="http://news.163.com/special/dada_valentines2016_test/" />
+<title>dada_valentines2016</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="renderer" content="webkit">
+<meta content="telephone=no" name="format-detection"/>
+<meta content="email=no" name="format-detection"/>
+<meta name="msapplication-tap-highlight" content="no">
+
+<script>if((/_touchall=1/.test(location.search)||!/auto|house|home|bbs|blog/.test(location.host))&&!/\/dy.163.com\/v2/.test(location.href)&&!(document.documentElement&&document.documentElement.getAttribute("phone"))&&/163\.com/.test(location.host)&&!/_pc=1/.test(location.search)&&/android.*?mobile|ipod|blackberry|bb\d+|phone/i.test(navigator.userAgent))document.write('<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/><div style="position:fixed;width:100%;height:100%;background:#fff"><div style="position:absolute;top:50%;left:0;width:100%;height:40px;margin-top:-40px;text-align:center;background:url(http://img1.cache.netease.com/utf8/endpage/image/loading.gif) no-repeat top center;padding-top:40px;color:#666">页面加载中 ...</div></div><script src="http://img2.cache.netease.com/f2e/system/touchall/collect/foot~CmOKC1ZOYC3Y.js"'+' defer><'+'/script><plaintext style="display:none">');</script>
+<link href="http://img2.cache.netease.com/f2e/news/common/css/news.BmDT9sluSdyy.27.css" rel="stylesheet" type="text/css" />
+<script src="http://img1.cache.netease.com/cnews/js/ntes_jslib_1.x.js" type="text/javascript" charset="gb2312"></script>
+<script src="http://img1.cache.netease.com/f2e/lib/js/ne.js"></script>
+<style>
+html,body{
+	width: 750px;height: 100%;
+}
+.wrap{
+	width: 100%;height: 100%;
+	overflow: hidden;
+	background: #fff;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+	<canvas id="app"></canvas>
+</div>
+<script>
+;(function(){
+	"use strict";
+	function preventDefault(ev) {
+		ev.preventDefault();
+	}
+	document.addEventListener('touchmove', preventDefault, false);
+	function NyPhile(){
+		this.canvas = document.getElementById("app");
+		this.ctx = this.canvas.getContext("2d");
+		this.winW = 0;
+		this.winH = 0;
+		// spots 坐标
+		this.spots = {
+			w : 7,
+			h : 7,
+			pos : (function(){
+				var g = 3,
+					d = 200,
+					arr = [];
+				for (var i = 0; i < 9; i++) {
+					var row = Math.ceil((i + 1) / g);
+					var col = (i % g) + 1;
+					arr.push({
+						l: d * row,
+						t: d * col,
+						id: i
+					})
+				}
+				return arr;
+			})()
+		};
+		// 起始点
+		this.currentSpot = -1;
+		// 点顺序
+		this.conbine = [];
+	}
+	NyPhile.prototype.drawLine = function(n){
+		if(n.length < 2){
+			return;
+		}
+		for (var i = 0; i < n.length - 1; i++) {
+			this.ctx.beginPath();
+			this.ctx.lineCap = "round";
+			this.ctx.lineWidth = this.spots.w * 2;
+			this.ctx.moveTo(this.spots.pos[n[i]].l,this.spots.pos[n[i]].t);
+			this.ctx.lineTo(this.spots.pos[n[i+1]].l,this.spots.pos[n[i+1]].t);
+			this.ctx.stroke();
+		};
+	}
+	NyPhile.prototype.resize = function(){
+		this.winW = window.innerWidth ;
+		this.winH = window.innerHeight;
+		if(this.winW > this.winH){
+			this.winW = 750;
+			this.winH = 1206;
+		}
+		this.canvas.setAttribute("width", this.winW);
+		this.canvas.setAttribute("height",this.winH);
+	}
+	NyPhile.prototype.initCanvas = function(){
+		this.ctx.fillStyle = "white";
+		this.ctx.fillRect(0,0,750,this.winH);
+	}
+	NyPhile.prototype.initSpots = function(){
+		this.ctx.clearRect(0, 0, 750, this.winH);
+		this.ctx.fillStyle = "#020202";
+		for (var i = 0; i < this.spots.pos.length; i++) {
+			this.ctx.beginPath();
+			this.ctx.arc(this.spots.pos[i].l,this.spots.pos[i].t,this.spots.w,0,2*Math.PI,true);
+			this.ctx.fill();
+		};
+		this.drawLine(this.conbine)
+	}
+	NyPhile.prototype.getSpot = function(e){
+		var x = e.touches[0].pageX,
+			y = e.touches[0].pageY;
+		for (var i = 0; i < this.spots.pos.length; i++) {
+			if(x > this.spots.pos[i].l - 15 && x < this.spots.pos[i].l + this.spots.w + 15 && y > this.spots.pos[i].t - 15 && y < this.spots.pos[i].t + this.spots.h + 15 && !this.spots.pos[i].isDrawed){
+				return this.spots.pos[i].id;//返回匹配点
+			}
+		};
+	}
+	NyPhile.prototype.touchmove = function(){
+		var self = this;
+		this.canvas.addEventListener("touchmove",function(e){			
+			var index = self.getSpot(e);
+				// 命中点
+			if ((index || index === 0)) {
+				self.spots.pos[index].isDrawed = true;
+				self.currentSpot = index;
+				self.conbine.push(self.currentSpot);
+			}
+			// 非起始点画线
+			if (self.currentSpot !== -1) {
+				self.initCanvas();
+				self.initSpots();
+				self.ctx.beginPath();
+				self.ctx.lineCap = "round";
+				self.ctx.lineWidth = self.spots.w * 2;
+				self.ctx.moveTo(self.spots.pos[self.currentSpot].l, self.spots.pos[self.currentSpot].t);
+				self.ctx.lineTo(e.touches[0].pageX, e.touches[0].pageY);
+				self.ctx.stroke();
+			}
+		});
+	}
+	NyPhile.prototype.refresh = function(){
+		this.conbine = [];
+		this.currentSpot = -1;
+		this.resulted = false;
+		this.initCanvas();
+		this.initSpots();
+		for (var i = 0; i < this.spots.pos.length; i++) {
+			this.spots.pos[i].isDrawed = false;
+		};
+	}
+	NyPhile.prototype.init = function(){
+		this.resize(); 
+		this.initCanvas();
+		this.initSpots();
+		this.touchmove();
+	}
+	var app = new NyPhile();
+	app.init();
+	window.NyPhile = NyPhile;
+})();
+</script>
+</body>
+</html>
