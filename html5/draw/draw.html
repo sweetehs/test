@@ -21,153 +21,19 @@ html,body{
 	overflow: hidden;
 	background: #fff;
 }
+canvas{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
+	<canvas id="bapp"></canvas>
 	<canvas id="app"></canvas>
 </div>
-<script>
-;(function(){
-	"use strict";
-	function preventDefault(ev) {
-		ev.preventDefault();
-	}
-	document.addEventListener('touchmove', preventDefault, false);
-	function NyPhile(){
-		this.canvas = document.getElementById("app");
-		this.ctx = this.canvas.getContext("2d");
-		this.winW = 0;
-		this.winH = 0;
-		this.lineW = 8;
-		// spots 坐标
-		this.spots = {
-			w : 30,
-			h : 30,
-			pos : (function(){
-				var g = 3,
-					d = 200,
-					arr = [];	
-				for (var i = 0; i < g*g; i++) {
-					var row = Math.ceil((i + 1) / g);
-					var col = (i % g) + 1;
-					arr.push({
-						l: d * row,
-						t: d * col,
-						id: i
-					})
-				}
-				return arr;
-			})()
-		};
-		// 起始点
-		this.currentSpot = -1;
-		// 点顺序
-		this.conbine = [];
-	}
-	NyPhile.prototype.drawLine = function(n){
-		if(n.length < 2){
-			return;
-		}
-		for (var i = 0; i < n.length - 1; i++) {
-			this.ctx.beginPath();
-			this.ctx.lineCap = "round";
-			this.ctx.lineWidth = this.lineW;
-			this.ctx.moveTo(this.spots.pos[n[i]].l,this.spots.pos[n[i]].t);
-			this.ctx.lineTo(this.spots.pos[n[i+1]].l,this.spots.pos[n[i+1]].t);
-			this.ctx.stroke();
-		};
-	}
-	NyPhile.prototype.resize = function(){
-		this.winW = window.innerWidth ;
-		this.winH = window.innerHeight;
-		if(this.winW > this.winH){
-			this.winW = 750;
-			this.winH = 1206;
-		}
-		this.canvas.setAttribute("width", this.winW);
-		this.canvas.setAttribute("height",this.winH);
-	}
-	NyPhile.prototype.initCanvas = function(){
-		this.ctx.fillStyle = "white";
-		this.ctx.fillRect(0,0,750,this.winH);
-	}
-	NyPhile.prototype.initSpots = function(){
-		this.ctx.clearRect(0, 0, 750, this.winH);
-		
-		for (var i = 0; i < this.spots.pos.length; i++) {
-			this.ctx.fillStyle = "#020202";
-			this.ctx.beginPath();
-			this.ctx.arc(this.spots.pos[i].l,this.spots.pos[i].t,this.spots.w,0,2*Math.PI,true);
-			this.ctx.fill();
-			this.ctx.fillStyle = "#ffffff";
-			this.ctx.beginPath();
-			this.ctx.arc(this.spots.pos[i].l,this.spots.pos[i].t,this.spots.w-2,0,2*Math.PI,true);
-			this.ctx.fill();
-			this.ctx.fillStyle = "#020202";
-			this.ctx.beginPath();
-			this.ctx.arc(this.spots.pos[i].l,this.spots.pos[i].t,10,0,2*Math.PI,true);
-			this.ctx.fill();
-		};
-		this.drawLine(this.conbine)
-	}
-	NyPhile.prototype.getSpot = function(x,y){
-		for (var i = 0; i < this.spots.pos.length; i++) {
-			if(x > this.spots.pos[i].l - 15 && x < this.spots.pos[i].l + this.spots.w + 15 && y > this.spots.pos[i].t - 15 && y < this.spots.pos[i].t + this.spots.h + 15 && !this.spots.pos[i].isDrawed){
-				return this.spots.pos[i].id;//返回匹配点
-			}
-		};
-	}
-	NyPhile.prototype.touchEvent = function(){
-		var self = this;
-		this.canvas.addEventListener("touchstart",function(e){
-			self.refresh();
-		})
-		this.canvas.addEventListener("touchmove",function(e){			
-			var index = self.getSpot(e.touches[0].pageX,e.touches[0].pageY);
-				// 命中点
-			if ((index || index === 0)) {
-				self.spots.pos[index].isDrawed = true;
-				self.currentSpot = index;
-				self.conbine.push(self.currentSpot);
-			}
-			// 非起始点画线
-			if (self.currentSpot !== -1) {
-				self.initCanvas();
-				self.initSpots();
-				self.ctx.beginPath();
-				self.ctx.lineCap = "round";
-				self.ctx.lineWidth = self.lineW;
-				self.ctx.moveTo(self.spots.pos[self.currentSpot].l, self.spots.pos[self.currentSpot].t);
-				self.ctx.lineTo(e.touches[0].pageX, e.touches[0].pageY);
-				self.ctx.stroke();
-			}
-		});
-		this.canvas.addEventListener("touchend",function(e){
-			self.initCanvas();
-			self.initSpots();
-		});
-	}
-	NyPhile.prototype.refresh = function(){
-		this.conbine = [];
-		this.currentSpot = -1;
-		this.resulted = false;
-		this.initCanvas();
-		this.initSpots();
-		for (var i = 0; i < this.spots.pos.length; i++) {
-			this.spots.pos[i].isDrawed = false;
-		};
-	}
-	NyPhile.prototype.init = function(){
-		this.resize(); 
-		this.initCanvas();
-		this.initSpots();
-		this.touchEvent();
-	}
-	var app = new NyPhile();
-	app.init();
-	window.NyPhile = NyPhile;
-})();
-</script>
 </body>
+<script src="draw.js"></script>
 </html>
