@@ -1,0 +1,18 @@
+.sidebar-wrapper ul {
+  width: 100px;
+  background: #abc;
+  text-align: center;
+}
+.sidebar-wrapper ul li {
+  height: 30px;
+  line-height: 30px;
+}
+.sidebar-wrapper ul li.active {
+  background: #3879D9;
+}
+.sidebar-wrapper ul a {
+  color: #000;
+}
+.sidebar-wrapper ul a:hover {
+  color: #ccc;
+}

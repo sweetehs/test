@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="../sidebar/sidebar.css">
+<div class="sidebar-wrapper" ng-controller="sidebarCtrl">
+	<ul>
+		<li ng-repeat="d in navList" ng-class="{active: currentIndex == $index}">
+			<a ng-click="clickNav(d,$index)" ui-sref="{{d.hash}}({id:{{d.id}}})">{{d.name}}</a>
+		</li>
+	</ul>	
+</div>
