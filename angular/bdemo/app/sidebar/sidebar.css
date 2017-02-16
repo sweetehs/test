@@ -1,5 +1,7 @@
+.sidebar-wrapper {
+  width: 100%;
+}
 .sidebar-wrapper ul {
-  width: 100px;
   background: #abc;
   text-align: center;
 }
@@ -12,6 +14,9 @@
 }
 .sidebar-wrapper ul a {
   color: #000;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
 }
 .sidebar-wrapper ul a:hover {
   color: #ccc;

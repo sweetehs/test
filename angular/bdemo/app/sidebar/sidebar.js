@@ -1,7 +1,8 @@
-routeApp.controller("sidebarCtrl", function($scope, $state) {
+app.controller("sidebarCtrl", function($scope, $state, $http, $rootScope) {
+	console.log($rootScope.test);
 	$scope.navList = [{
 		hash: "module1",
-		name: "module1",
+		name: "list test",
 		id: '1'
 	}, {
 		hash: "module2",
@@ -9,20 +10,32 @@ routeApp.controller("sidebarCtrl", function($scope, $state) {
 		id: '2'
 	}];
 
-	function init() {
+	function setActive(hash) {
 		$scope.navList.forEach(function(_data, index) {
-			if (location.hash.indexOf(_data.hash) !== -1) {
+			if (hash.indexOf(_data.hash) !== -1) {
 				$scope.currentIndex = index;
 			}
 		});
 	}
-	$scope.clickNav = function(data, index) {
-		$scope.currentIndex = index;
-	};
-	init();
+	$scope.$on("$stateChangeStart", function() {
+		console.log("开始解析模板");
+	});
+	$scope.$on("$stateChangeSuccess", function(event, toState, toParams, fromState, fromParams) {
+		console.log("完成解析模板");
+		setActive(toState.name);
+	});
 });
-routeApp.directive("sidebar", function() {
+app.directive("sidebar", function(util) {
 	return {
-		templateUrl: "sidebar/sidebar.html"
+		restrict: "E",
+		templateUrl: "sidebar/sidebar.html",
+		scope: {},
+		link: function(scope, element, attrs) {
+			/*
+				scope:{}  代表隔离的scope，不能获取父元素里面的scope的值
+			*/
+			console.log(scope.name);
+			util.log("sidebar run");
+		}
 	};
 })

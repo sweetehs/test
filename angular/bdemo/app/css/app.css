@@ -1,0 +1,10 @@
+.main-wrapper .main-inner {
+  display: flex;
+}
+.main-wrapper .main-left {
+  width: 300px;
+}
+.main-wrapper .main-right {
+  flex: 1;
+  padding: 20px;
+}

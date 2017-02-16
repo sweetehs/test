@@ -1,1 +1,27 @@
-<p>{{message}}</p>
+<style>
+	table{
+		width: 800px;
+		text-align: center;
+	}
+</style>
+<div>
+	<div>
+		<input type="text" ng-model="key">
+	</div>
+	<table>
+		<thead>
+			<th>姓名</th>
+			<th>年龄</th>
+			<th>邮箱</th>
+			<th>星座</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="d in list | filter:myFilter">
+				<td>{{d.name}}</td>
+				<td>{{d.age}}</td>
+				<td>{{d.email}}</td>
+				<td>{{d.constellation}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
