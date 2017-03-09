@@ -6,7 +6,7 @@
 </style>
 <div>
 	<div>
-		<input type="text" ng-model="key">
+		<input type="text" ng-model="key">{{btnSearchTitle}}
 	</div>
 	<table>
 		<thead>
@@ -16,7 +16,7 @@
 			<th>星座</th>
 		</thead>
 		<tbody>
-			<tr ng-repeat="d in list | filter:myFilter">
+			<tr ng-repeat="d in list | filter:myFilter|filter:ageFilter">
 				<td>{{d.name}}</td>
 				<td>{{d.age}}</td>
 				<td>{{d.email}}</td>

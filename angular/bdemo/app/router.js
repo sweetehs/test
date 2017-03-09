@@ -1,4 +1,16 @@
-app.config(["$provide", "$stateProvider", function($provide, $stateProvider) {
+app.config(["$provide", "$stateProvider", "$httpProvider", function($provide, $stateProvider, $httpProvider) {
+	// http拦截器
+	$httpProvider.interceptors.push(function($q) {
+		return {
+			request: function(config) {
+				config.headers['X-XSRF-TOKEN'] = "XSRF-TOKEN";
+				return config;
+			},
+			response: function(response) {
+				return response;
+			},
+		}
+	});
 	// 注意url开头要加斜杠/
 	$stateProvider.state("module1", {
 		url: "/module1/:id",
@@ -25,5 +37,14 @@ app.config(["$provide", "$stateProvider", function($provide, $stateProvider) {
 		},
 		templateUrl: 'module2/module2.html',
 		controller: "module2"
+	}).state("injectorTest", {
+		url: "/injectorTest/:id",
+		resolve: {
+			stateParams: function($stateParams) {
+				return $stateParams;
+			}
+		},
+		templateUrl: 'module-test-injector/module-test-injector.html',
+		controller: "injectorTest"
 	});
 }]);

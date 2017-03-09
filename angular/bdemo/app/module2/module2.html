@@ -1,1 +1,23 @@
-<p>{{message}}</p>
+<div>
+	Date format: <input ng-model="format"> <hr/>
+	<p>Current time is: <span my-current-time="format"></span></p>
+    <p>Current time is: <span my-current-time1="format"></span></p>    
+</div>
+<br><br><br><br><br>
+<div ng-click="dialogpop()">dialogpop</div>
+<pop $close="pclose">
+	<div ng-click="popContentClick()">aaaaa</div>
+	<div ng-click="close()">cancel</div>
+	<div ng-click="parentClose()">parent cancel</div>
+</pop>
+
+<script type="text/ng-template" id="templateId">
+    <h1 ng-click="innerClick()">Template heading</h1>
+    <p>Content goes here</p>
+</script>
+
+
+<br><br><br><br><br>
+
+
+<autoinput test="test"></autoinput>

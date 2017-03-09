@@ -1,5 +1,7 @@
 app.controller("sidebarCtrl", function($scope, $state, $http, $rootScope) {
 	console.log($rootScope.test);
+	console.log($scope.$parent.name);
+	console.log($scope.name);
 	$scope.navList = [{
 		hash: "module1",
 		name: "list test",
@@ -8,6 +10,10 @@ app.controller("sidebarCtrl", function($scope, $state, $http, $rootScope) {
 		hash: "module2",
 		name: "module2",
 		id: '2'
+	}, {
+		hash: "injectorTest",
+		name: "injectorTest",
+		id: "3"
 	}];
 
 	function setActive(hash) {
@@ -29,12 +35,20 @@ app.directive("sidebar", function(util) {
 	return {
 		restrict: "E",
 		templateUrl: "sidebar/sidebar.html",
-		scope: {},
+		scope: false,
 		link: function(scope, element, attrs) {
 			/*
-				scope:{}  代表隔离的scope，不能获取父元素里面的scope的值
+				scope值
+				true,创建子作用域。可以通过scope.name,scope.$parent.name获取;
+				false,不创建子作用域 可以通过scope.name获取，不能通过scope.$parent.name获取;
+				tru,false，原型继承，子可以修改父的值
+				{}  代表隔离的scope，不能通过scope.name获取,可以通过scope.$parent.name获取;
+				@  父变子变 子变父不变
+				=  双向绑定
+				&  表达式
 			*/
 			console.log(scope.name);
+			scope.name = "change name"
 			util.log("sidebar run");
 		}
 	};

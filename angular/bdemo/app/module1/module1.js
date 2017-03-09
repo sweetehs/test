@@ -1,4 +1,11 @@
 app.controller('module1', function($scope, stateParams, http) {
+	// http模块只有在注入的时候才会初始化，否则不会
+	setTimeout(function() {
+		// 执行angular的上下文
+		$scope.$apply(function() {
+			$scope.btnSearchTitle = "搜索"
+		})
+	}, 100);
 	http.ajax({
 		url: "/list",
 		method: "get",
@@ -14,6 +21,13 @@ app.controller('module1', function($scope, stateParams, http) {
 			return item.constellation.indexOf($scope.key) !== -1;
 		} else {
 			return true;
+		}
+	}
+	$scope.ageFilter = function(item) {
+		if (item.age < 20) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 })
