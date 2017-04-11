@@ -11,4 +11,4 @@ app.controller("leftCtrl", function($scope) {
 		});
 	}, 2000);
 })
-Mock.mockjax(app);
+// Mock.mockjax(app);

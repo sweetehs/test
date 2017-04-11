@@ -34,7 +34,7 @@ app.controller("sidebarCtrl", function($scope, $state, $http, $rootScope) {
 app.directive("sidebar", function(util) {
 	return {
 		restrict: "E",
-		templateUrl: "sidebar/sidebar.html",
+		templateUrl: "modules/sidebar/sidebar.html",
 		scope: false,
 		link: function(scope, element, attrs) {
 			/*

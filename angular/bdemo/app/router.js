@@ -20,7 +20,7 @@ app.config(["$provide", "$stateProvider", "$httpProvider", function($provide, $s
 				return $stateParams;
 			}
 		},
-		templateUrl: 'module1/module1.html',
+		templateUrl: 'modules/module1/module1.html',
 		onEnter: function(stateParams) {
 			console.log("进入了module1");
 		},
@@ -35,7 +35,7 @@ app.config(["$provide", "$stateProvider", "$httpProvider", function($provide, $s
 				return $stateParams;
 			}
 		},
-		templateUrl: 'module2/module2.html',
+		templateUrl: 'modules/module2/module2.html',
 		controller: "module2"
 	}).state("injectorTest", {
 		url: "/injectorTest/:id",
@@ -44,7 +44,7 @@ app.config(["$provide", "$stateProvider", "$httpProvider", function($provide, $s
 				return $stateParams;
 			}
 		},
-		templateUrl: 'module-test-injector/module-test-injector.html',
+		templateUrl: 'modules/module-test-injector/module-test-injector.html',
 		controller: "injectorTest"
 	});
 }]);
