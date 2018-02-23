@@ -1,0 +1,39 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.6/Rx.js"></script>
+<style>
+    #drag {
+        width: 100px;
+        height: 100px;
+        background: #abc;
+        position: absolute
+    }
+</style>
+
+<body>
+    <input type="text" id="i1">
+    <input type="text" id="i2">
+    <button id="search">搜索</button>
+    <button id="page" value="1">分页</button>
+</body>
+<script>
+    var input1$ = Rx.Observable.fromEvent(document.querySelector("#i1"), "keyup").map(e => e.target.value).startWith("")
+    var input2$ = Rx.Observable.fromEvent(document.querySelector("#i2"), "keyup").map(e => e.target.value).startWith("")
+    var button1$ = Rx.Observable.fromEvent(document.querySelector("#search"), "click")
+    var button2$ = Rx.Observable.fromEvent(document.querySelector("#page"), "click").map(e => e.target.value)
+
+    var filter$ = input1$.combineLatest(input2$)
+    var search$ = filter$.switchMap((x, y) => {             
+        return button1$.mapTo({
+            key1:x[0],
+            key2:x[1]
+        })
+    }).do((v) => {
+       
+    }).share()
+
+    var page$ = button2$.withLatestFrom(search$).do((v) => {
+        
+    })
+
+    var app$ = search$.merge(page$)
+    app$.subscribe()
+</script>

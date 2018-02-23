@@ -1,0 +1,90 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.6/Rx.js"></script>
+<body>
+    <div>
+        <input type="text">
+    </div>
+    <div class="list-group"></div>
+</body>
+<script>
+    var index = 0
+    const mockHttpPost = ()=>{
+        return Rx.Observable.create((observer)=>{
+            let status = 'pending'
+            const timmer = setTimeout(() => {           
+                status = 'done'
+                observer.next(index++)
+                observer.complete()
+            }, 1000)
+            return () => {
+                clearTimeout(timmer)
+                if (status === 'pending') {
+                    console.warn('post canceled')
+                }
+            }
+        })
+    }
+    const createTodoItem = (val) => {
+        const result = document.createElement('LI')
+        result.classList.add('list-group-item')
+        const innerHTML = `
+            ${val}
+            <button type="button" class="button-remove">remove</button>
+        `
+        result.innerHTML = innerHTML
+        return result
+    }
+    const $input = document.querySelector('input')
+    const input$ = Rx.Observable.fromEvent($input, 'keydown')       
+        .debounceTime(100)        
+        .filter(e => e.keyCode === 13)   
+        .map(e => e.target.value)
+        .do((e)=>{
+            console.log("enter")
+        })        
+    const item$ = input$        
+        // .filter(v => v)        
+        // .distinct()
+        // .mergeMap((v)=>{            
+        //     return mockHttpPost().mapTo(v)
+        // })
+        .map(createTodoItem)              
+        .do(($el)=>{
+            console.log("add")
+            document.querySelector('.list-group').appendChild($el)            
+        })
+        .publishReplay(1)
+        .refCount()
+    const toggle$ = item$.mergeMap(($el)=>{
+            return Rx.Observable.fromEvent($el,"click")
+                .filter(e => e.target === $el)
+                .map(e => $el)
+                .mapTo($el)
+        })
+        .do((x)=>{
+            console.log("click")
+        })
+    const remove$ = item$.mergeMap(($el)=>{        
+        return Rx.Observable.fromEvent($el.querySelector(".button-remove"),"click")
+            .mapTo($el)
+        })
+        .do(($el)=>{
+            console.log("remove")
+        })
+    const app$ = toggle$.merge(remove$)     
+    app$.subscribe()
+    /*
+        mergeMap vs switchMap     
+            mergeMap 持续发射
+            switchMap 只保留最后一次发射       
+        distinct vs distinctUntilChanged
+            distinct 缓存里有就不发射
+            distinctUntilChanged 比较近两次发射值，不同发射
+        map vs mapTo
+        share vs publish
+            share 变热 .publishReplay(1).refCount()
+        concatAll vs mergeAll
+            就是concat和merge的多个版本
+        combineLatest vs zip
+
+    */
+</script>

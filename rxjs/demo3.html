@@ -1,0 +1,21 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.5.6/Rx.js"></script>
+<style>
+    #drag {
+        width: 100px;
+        height: 100px;
+        background: #abc;
+        position: absolute
+    }
+</style>
+
+<body>
+    <div id="drag"></div>
+</body>
+<script>
+    const dragDOM = document.getElementById('drag');    
+    Rx.Observable.fromEvent(dragDOM, 'click').map(()=>{        
+        return Rx.Observable.of.apply(this,[1,2,3,4])        
+    }).mergeAll().do((v)=>{
+        debugger
+    }).subscribe();
+</script>
